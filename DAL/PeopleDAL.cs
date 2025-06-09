@@ -41,12 +41,15 @@ namespace Malshinon.DAL
         }
 
 
+
+
+
         public static int GetIdBySecretCode(string secretCode)
         {
             try
             {
                 conn = SQLConnection.OpenConnect();
-                string Query = @"SELECT p.id FROM people p WHERE @secretCode = p.first_name";
+                string Query = @"SELECT p.id FROM people p WHERE @secretCode = p.secret_code";
                 MySqlCommand cmd = new MySqlCommand(Query, conn);
                 cmd.Parameters.AddWithValue("@secretCode", secretCode);
                 var reader = cmd.ExecuteReader();
@@ -57,6 +60,28 @@ namespace Malshinon.DAL
             {
                 Console.WriteLine(ex.Message);
                 return -1;
+            }
+            finally
+            {
+                SQLConnection.CloseConnection(conn);
+            }
+        }
+
+
+        public static void UpdateSecretCode(int id, string secretCode)
+        {
+            try
+            {
+                conn = SQLConnection.OpenConnect();
+                string Query = @"UPDATE people SET secret_code = @secretCode WHERE @id = id";
+                MySqlCommand cmd = new MySqlCommand(Query, conn);
+                cmd.Parameters.AddWithValue("@secretCode", secretCode);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine(ex.Message);
             }
             finally
             {
