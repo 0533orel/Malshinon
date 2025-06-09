@@ -199,5 +199,42 @@ namespace Malshinon.DAL
                 SQLConnection.CloseConnection(conn);
             }
         }
+
+
+
+
+        public static People GetPeople(int id)
+        {
+
+            People person = null;
+            try
+            {
+                conn = SQLConnection.OpenConnect();
+                string query = "SELECT * FROM people WHERE id = @id";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+
+                var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    person = new People
+                    {
+                        FirstName = reader.GetString("first_name"),
+                        LastName = reader.GetString("last_name"),
+                        SecretCode = reader.GetString("secret_code"),
+                        Type = reader.GetString("type"),
+                        NumReports = reader.GetInt32("num_reports"),
+                        NumMentions = reader.GetInt32("num_mentions")
+                    };
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"[ERROR] GetPeople: {ex.Message}");
+            }
+
+            return person;
+        }
+
     }
 }
