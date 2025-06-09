@@ -10,26 +10,29 @@ namespace Malshinon.DataBase
     public static class SQLConnection
     {
         static string connStr = "server=localhost;user=root;password=;database=malshinon";
-        public static MySqlConnection conn;
+        
 
         public static MySqlConnection OpenConnect()
         {
-            if (conn == null)
-                conn = new MySqlConnection(connStr);
-
-            if (conn.State != System.Data.ConnectionState.Open)
+            try
             {
+                MySqlConnection conn = new MySqlConnection(connStr);
                 conn.Open();
+                return conn;
             }
-            return conn;
+            catch (MySqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+
         }
 
-        public static void CloseConnection()
+        public static void CloseConnection(MySqlConnection connection)
         {
-            if (conn != null && conn.State == System.Data.ConnectionState.Open)
+            if (connection != null && connection.State == System.Data.ConnectionState.Open)
             {
-                conn.Close();
-                conn = null;
+                connection.Close();
             }
         }
 
