@@ -28,7 +28,7 @@ namespace Malshinon.DAL
                 cmd.Parameters.AddWithValue("@num_reports", people.NumReports);
                 cmd.Parameters.AddWithValue("@num_mentions", people.NumMentions);
                 cmd.ExecuteNonQuery();
-                Console.WriteLine("the people added successfully.");
+                Console.WriteLine("The people added successfully.");
             }
             catch (MySqlException ex)
             {
