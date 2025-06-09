@@ -88,5 +88,47 @@ namespace Malshinon.DAL
                 SQLConnection.CloseConnection(conn);
             }
         }
+
+
+        public static void UpdateNumReports(int secretCode)
+        {
+            try
+            {
+                conn = SQLConnection.OpenConnect();
+                string Query = @"UPDATE people SET num_reports = num_reports + 1 WHERE @secretCode = secret_code";
+                MySqlCommand cmd = new MySqlCommand(Query, conn);
+                cmd.Parameters.AddWithValue("@secretCode", secretCode);
+                cmd.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                SQLConnection.CloseConnection(conn);
+            }
+        }
+
+
+        public static void UpdateNumMentions(int id)
+        {
+            try
+            {
+                conn = SQLConnection.OpenConnect();
+                string Query = @"UPDATE people SET num_mentions = num_mentions + 1 WHERE @id = id";
+                MySqlCommand cmd = new MySqlCommand(Query, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                SQLConnection.CloseConnection(conn);
+            }
+        }
     }
 }
