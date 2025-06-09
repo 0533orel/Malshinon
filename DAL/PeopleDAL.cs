@@ -9,10 +9,10 @@ using Malshinon.DataBase;
 
 namespace Malshinon.DAL
 {
-    public class PeopleDAL
+    public static class PeopleDAL
     {
         static MySqlConnection conn;
-        public static void AddPeople(People people)
+        public static void Add(People people)
         {
             try
             {
@@ -28,11 +28,35 @@ namespace Malshinon.DAL
                 cmd.Parameters.AddWithValue("@num_reports", people.NumReports);
                 cmd.Parameters.AddWithValue("@num_mentions", people.NumMentions);
                 cmd.ExecuteNonQuery();
-
+                Console.WriteLine("the people added successfully.");
             }
             catch (MySqlException ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                SQLConnection.CloseConnection(conn);
+            }
+        }
+
+
+        public static int GetIdBySecretCode(string secretCode)
+        {
+            try
+            {
+                conn = SQLConnection.OpenConnect();
+                string Query = @"SELECT p.id FROM people p WHERE @secretCode = p.first_name";
+                MySqlCommand cmd = new MySqlCommand(Query, conn);
+                cmd.Parameters.AddWithValue("@secretCode", secretCode);
+                var reader = cmd.ExecuteReader();
+                reader.Read();
+                return reader.GetInt32("id");
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine(ex.Message);
+                return -1;
             }
             finally
             {
