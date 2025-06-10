@@ -12,11 +12,12 @@ namespace Malshinon.DAL
     public static class PeopleDAL
     {
         static MySqlConnection conn;
+        static SQLConnection SqlConnection = new SQLConnection("malshinon");
         public static void Add(People people)
         {
             try
             {
-                conn = SQLConnection.OpenConnect();
+                conn = SqlConnection.OpenConnect();
                 string Query = @"INSERT INTO people 
                             (first_name, last_name, secret_code, type, num_reports, num_mentions) 
                             VALUES (@first_name, @last_name, @secret_code, @type, @num_reports, @num_mentions)";
@@ -36,7 +37,7 @@ namespace Malshinon.DAL
             }
             finally
             {
-                SQLConnection.CloseConnection(conn);
+                SqlConnection.CloseConnection(conn);
             }
         }
 
@@ -45,7 +46,7 @@ namespace Malshinon.DAL
         {
             try
             {
-                conn = SQLConnection.OpenConnect();
+                conn = SqlConnection.OpenConnect();
                 string Query = @"SELECT p.id FROM people p WHERE p.secret_code = @secretCode";
                 MySqlCommand cmd = new MySqlCommand(Query, conn);
                 cmd.Parameters.AddWithValue("@secretCode", secretCode);
@@ -60,7 +61,7 @@ namespace Malshinon.DAL
             }
             finally
             {
-                SQLConnection.CloseConnection(conn);
+                SqlConnection.CloseConnection(conn);
             }
         }
 
@@ -69,7 +70,7 @@ namespace Malshinon.DAL
         {
             try
             {
-                conn = SQLConnection.OpenConnect();
+                conn = SqlConnection.OpenConnect();
                 string Query = @"SELECT p.id FROM people p WHERE p.first_name = @firstName AND p.last_name = lastNane";
                 MySqlCommand cmd = new MySqlCommand(Query, conn);
                 cmd.Parameters.AddWithValue("@firstName", firstName);
@@ -85,7 +86,7 @@ namespace Malshinon.DAL
             }
             finally
             {
-                SQLConnection.CloseConnection(conn);
+                SqlConnection.CloseConnection(conn);
             }
         }
 
@@ -94,7 +95,7 @@ namespace Malshinon.DAL
         {
             try
             {
-                conn = SQLConnection.OpenConnect();
+                conn = SqlConnection.OpenConnect();
                 string Query = @"UPDATE people SET secret_code = @secretCode WHERE id = @id";
                 MySqlCommand cmd = new MySqlCommand(Query, conn);
                 cmd.Parameters.AddWithValue("@secretCode", secretCode);
@@ -107,19 +108,19 @@ namespace Malshinon.DAL
             }
             finally
             {
-                SQLConnection.CloseConnection(conn);
+                SqlConnection.CloseConnection(conn);
             }
         }
 
 
-        public static void UpdateNumReports(int id)
+        public static void UpdateNumReports(int reporterId)
         {
             try
             {
-                conn = SQLConnection.OpenConnect();
-                string Query = @"UPDATE people SET num_reports = num_reports + 1 WHERE id = @id";
+                conn = SqlConnection.OpenConnect();
+                string Query = @"UPDATE people SET num_reports = num_reports + 1 WHERE id = @reporterId";
                 MySqlCommand cmd = new MySqlCommand(Query, conn);
-                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@reporterId", reporterId);
                 cmd.ExecuteNonQuery();
             }
             catch (MySqlException ex)
@@ -128,19 +129,19 @@ namespace Malshinon.DAL
             }
             finally
             {
-                SQLConnection.CloseConnection(conn);
+                SqlConnection.CloseConnection(conn);
             }
         }
 
 
-        public static void UpdateNumMentions(int id)
+        public static void UpdateNumMentions(int MentionsId)
         {
             try
             {
-                conn = SQLConnection.OpenConnect();
-                string Query = @"UPDATE people SET num_mentions = num_mentions + 1 WHERE id = @id";
+                conn = SqlConnection.OpenConnect();
+                string Query = @"UPDATE people SET num_mentions = num_mentions + 1 WHERE id = @MentionsId";
                 MySqlCommand cmd = new MySqlCommand(Query, conn);
-                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@MentionsId", MentionsId);
                 cmd.ExecuteNonQuery();
             }
             catch (MySqlException ex)
@@ -149,7 +150,7 @@ namespace Malshinon.DAL
             }
             finally
             {
-                SQLConnection.CloseConnection(conn);
+                SqlConnection.CloseConnection(conn);
             }
         }
 
@@ -165,7 +166,7 @@ namespace Malshinon.DAL
                     {3, "both" },
                     {4, "potential agent" }
                 };
-                conn = SQLConnection.OpenConnect();
+                conn = SqlConnection.OpenConnect();
                 string Query = @"UPDATE people SET type = @choseType  WHERE id = @id";
                 MySqlCommand cmd = new MySqlCommand(Query, conn);
                 cmd.Parameters.AddWithValue("@id", id);
@@ -178,7 +179,7 @@ namespace Malshinon.DAL
             }
             finally
             {
-                SQLConnection.CloseConnection(conn);
+                SqlConnection.CloseConnection(conn);
             }
         }
 
@@ -188,7 +189,7 @@ namespace Malshinon.DAL
             try
             {
                 People people = null;
-                conn = SQLConnection.OpenConnect();
+                conn = SqlConnection.OpenConnect();
                 string query = "SELECT * FROM people WHERE id = @id";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@id", id);
@@ -215,7 +216,7 @@ namespace Malshinon.DAL
             }
             finally
             {
-                SQLConnection.CloseConnection(conn);
+                SqlConnection.CloseConnection(conn);
             }
         }
 
@@ -224,7 +225,7 @@ namespace Malshinon.DAL
         {
             try
             {
-                conn = SQLConnection.OpenConnect();
+                conn = SqlConnection.OpenConnect();
                 string query = "DELETE FROM people WHERE id = @id";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@id", id);
@@ -236,7 +237,7 @@ namespace Malshinon.DAL
             }
             finally
             {
-                SQLConnection.CloseConnection(conn);
+                SqlConnection.CloseConnection(conn);
             }
         }
     }

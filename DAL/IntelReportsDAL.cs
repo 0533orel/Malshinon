@@ -12,12 +12,14 @@ namespace Malshinon.DAL
     public static class IntelReportsDAL 
     {
         static MySqlConnection conn;
+        static SQLConnection SqlConnection = new SQLConnection("malshinon");
+
 
         public static void Add(IntelReports intelReports)
         {
             try
             {
-                conn = SQLConnection.OpenConnect();
+                conn = SqlConnection.OpenConnect();
                 string Query = @"INSERT INTO intelreports 
                             (reporter_id, target_id, text, timestamp) 
                             VALUES (@reporter_id, @target_id, @text, @timestamp)";
@@ -35,8 +37,34 @@ namespace Malshinon.DAL
             }
             finally
             {
-                SQLConnection.CloseConnection(conn);
+                SqlConnection.CloseConnection(conn);
             }
         }
+
+
+        public static string GetText(int reporterId)
+        {
+            try
+            {
+                conn = SqlConnection.OpenConnect();
+                string query = "SELECT i.text FROM intelreports i WHERE i.reporter_id = @reporterId";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@reporterId", reporterId);
+                var reader = cmd.ExecuteReader();
+                reader.Read();
+                return reader.GetString("text");
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"[ERROR] GetText: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
+        
     }
 }
