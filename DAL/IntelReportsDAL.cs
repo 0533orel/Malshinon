@@ -12,12 +12,14 @@ namespace Malshinon.DAL
     public static class IntelReportsDAL 
     {
         static MySqlConnection conn;
+        static SQLConnection SqlConnection = new SQLConnection("malshinon");
+
 
         public static void Add(IntelReports intelReports)
         {
             try
             {
-                conn = SQLConnection.OpenConnect();
+                conn = SqlConnection.OpenConnect();
                 string Query = @"INSERT INTO intelreports 
                             (reporter_id, target_id, text, timestamp) 
                             VALUES (@reporter_id, @target_id, @text, @timestamp)";
@@ -35,7 +37,146 @@ namespace Malshinon.DAL
             }
             finally
             {
-                SQLConnection.CloseConnection(conn);
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
+
+        public static string GetTextByReporterId(int reporterId)
+        {
+            try
+            {
+                conn = SqlConnection.OpenConnect();
+                string query = "SELECT i.text FROM intelreports i WHERE i.reporter_id = @reporterId";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@reporterId", reporterId);
+                var reader = cmd.ExecuteReader();
+                reader.Read();
+                return reader.GetString("text");
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"[ERROR] GetTextByReporterId: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
+
+        public static string GetTextByTargetId(int targetId)
+        {
+            try
+            {
+                conn = SqlConnection.OpenConnect();
+                string query = "SELECT i.text FROM intelreports i WHERE i.target_id = @targetId";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@targetId", targetId);
+                var reader = cmd.ExecuteReader();
+                reader.Read();
+                return reader.GetString("text");
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"[ERROR] GetTextByTargetId: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
+
+        public static void GetAllInfoReporter(int reporterId)
+        {
+            try
+            {
+                conn = SqlConnection.OpenConnect();
+                string query = @"SELECT p.first_name, p.last_name, p.secret_code, p.type, p.num_reports, i.text, i.timestamp
+                                FROM intelreports i JOIN people p ON i.reporter_id = @reporterId AND p.id = @reporterId";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@reporterId", reporterId);
+                var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    string firstName = reader.GetString("first_name");
+                    string lastName = reader.GetString("last_name");
+                    int secretCode = reader.GetInt32("secret_code");
+                    string type = reader.GetString("type");
+                    int numReports = reader.GetInt32("num_reports");
+                    string text = reader.GetString("text");
+                    DateTime timestamp = reader.GetDateTime("timestamp");
+                    Console.WriteLine($"name: {firstName} {lastName}: secret code: {secretCode}. type: {type}. num reports: {numReports} \n" +
+                        $"text: {text} at time: {timestamp}");
+                    Console.WriteLine();
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"[ERROR] GetAllInfoReporter: {ex.Message}");
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
+
+        public static void GetAllInfoMention(int mentionId)
+        {
+            try
+            {
+                conn = SqlConnection.OpenConnect();
+                string query = @"SELECT p.first_name, p.last_name, p.secret_code, p.type, p.num_mentions, i.text, i.timestamp
+                                FROM intelreports i JOIN people p ON i.reporter_id = @mentionId AND p.id = @mentionId";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@mentionId", mentionId);
+                var reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    string firstName = reader.GetString("first_name");
+                    string lastName = reader.GetString("last_name");
+                    int secretCode = reader.GetInt32("secret_code");
+                    string type = reader.GetString("type");
+                    int numMentions = reader.GetInt32("num_mentions");
+                    string text = reader.GetString("text");
+                    DateTime timestamp = reader.GetDateTime("timestamp");
+                    Console.WriteLine($"name: {firstName} {lastName}: secret code: {secretCode}. type: {type}. num reports: {numMentions} \n" +
+                        $"text: {text} at time: {timestamp}");
+                    Console.WriteLine();
+                }
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"[ERROR] GetAllInfoMention: {ex.Message}");
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
+
+        public static void Delete(int id)
+        {
+            try
+            {
+                conn = SqlConnection.OpenConnect();
+                string query = "DELETE FROM intelreports WHERE id = @id";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"[ERROR] Delete: {ex.Message}");
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
             }
         }
     }

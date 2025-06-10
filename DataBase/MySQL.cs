@@ -7,12 +7,20 @@ using MySql.Data.MySqlClient;
 
 namespace Malshinon.DataBase
 {
-    public static class SQLConnection
+    public class SQLConnection
     {
-        static string connStr = "server=localhost;user=root;password=;database=malshinon";
+        public  string NameDB;
+        private string connStr;
+
+        public SQLConnection(string nameDB)
+        {
+            NameDB = nameDB;
+            connStr = $"server=localhost;user=root;password=;database={NameDB}";
+        }
+
         
 
-        public static MySqlConnection OpenConnect()
+        public MySqlConnection OpenConnect()
         {
             try
             {
@@ -28,7 +36,7 @@ namespace Malshinon.DataBase
 
         }
 
-        public static void CloseConnection(MySqlConnection connection)
+        public void CloseConnection(MySqlConnection connection)
         {
             if (connection != null && connection.State == System.Data.ConnectionState.Open)
             {
