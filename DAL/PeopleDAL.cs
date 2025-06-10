@@ -184,7 +184,7 @@ namespace Malshinon.DAL
         }
 
 
-        public static People GetPeople(int id)
+        public static People GetPeopleById(int id)
         {
             try
             {
@@ -211,7 +211,33 @@ namespace Malshinon.DAL
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine($"[ERROR] GetPeople: {ex.Message}");
+                Console.WriteLine($"[ERROR] GetPeopleById: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
+
+        public static string GetTypeById(int id)
+        {
+            try
+            {
+                conn = SqlConnection.OpenConnect();
+                string query = @"SELECT p.type
+                                 FROM people p WHERE p.id = @id";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                var reader = cmd.ExecuteReader();
+                reader.Read();
+                return reader.GetString("type");
+
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"[ERROR] GetTypeById: {ex.Message}");
                 return null;
             }
             finally
