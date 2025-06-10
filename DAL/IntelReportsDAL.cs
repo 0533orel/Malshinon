@@ -116,7 +116,7 @@ namespace Malshinon.DAL
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine($"[ERROR] GetAllInfo: {ex.Message}");
+                Console.WriteLine($"[ERROR] GetAllInfoReporter: {ex.Message}");
             }
             finally
             {
@@ -151,7 +151,7 @@ namespace Malshinon.DAL
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine($"[ERROR] GetAllInfo: {ex.Message}");
+                Console.WriteLine($"[ERROR] GetAllInfoMention: {ex.Message}");
             }
             finally
             {

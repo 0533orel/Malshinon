@@ -221,6 +221,33 @@ namespace Malshinon.DAL
         }
 
 
+        public static string GetFullName(int id)
+        {
+            try
+            {
+                conn = SqlConnection.OpenConnect();
+                string query = @"SELECT p.first_name, p.last_name
+                                 FROM people p WHERE p.id = @id";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@id", id);
+                var reader = cmd.ExecuteReader();
+                reader.Read();
+                string fullName = reader.GetString("first_name") + " " + reader.GetString("last_name");
+                return fullName;
+
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"[ERROR] GetFullName: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
+
         public static void Delete(int id)
         {
             try
