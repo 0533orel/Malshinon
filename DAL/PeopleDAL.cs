@@ -56,7 +56,7 @@ namespace Malshinon.DAL
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine($"[ERROR] GetIdBySecretCode: {ex.Message}");
+                //Console.WriteLine($"[ERROR] GetIdBySecretCode: {ex.Message}");
                 return -1;
             }
             finally
@@ -71,7 +71,7 @@ namespace Malshinon.DAL
             try
             {
                 conn = SqlConnection.OpenConnect();
-                string Query = @"SELECT p.id FROM people p WHERE p.first_name = @firstName AND p.last_name = lastNane";
+                string Query = @"SELECT p.id FROM people p WHERE p.first_name = @firstName AND p.last_name = @lastNane";
                 MySqlCommand cmd = new MySqlCommand(Query, conn);
                 cmd.Parameters.AddWithValue("@firstName", firstName);
                 cmd.Parameters.AddWithValue("@lastNane", lastNane);
@@ -81,7 +81,7 @@ namespace Malshinon.DAL
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine($"[ERROR] GetIdByFullName: {ex.Message}");
+                //Console.WriteLine($"[ERROR] GetIdByFullName: {ex.Message}");
                 return -1;
             }
             finally
@@ -155,22 +155,15 @@ namespace Malshinon.DAL
         }
 
 
-        public static void UpdateType(int id, int chosenType)
+        public static void UpdateType(int id, string type)
         {
             try
             {
-                Dictionary<int, string> choseType = new Dictionary<int, string>
-                {
-                    {1, "reporter" },
-                    {2, "target" },
-                    {3, "both" },
-                    {4, "potential agent" }
-                };
                 conn = SqlConnection.OpenConnect();
-                string Query = @"UPDATE people SET type = @choseType  WHERE id = @id";
+                string Query = @"UPDATE people SET type = @type  WHERE id = @id";
                 MySqlCommand cmd = new MySqlCommand(Query, conn);
                 cmd.Parameters.AddWithValue("@id", id);
-                cmd.Parameters.AddWithValue("@choseType", choseType[chosenType]);
+                cmd.Parameters.AddWithValue("@type", type);
                 cmd.ExecuteNonQuery();
             }
             catch (MySqlException ex)
@@ -231,8 +224,14 @@ namespace Malshinon.DAL
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@id", id);
                 var reader = cmd.ExecuteReader();
-                reader.Read();
-                return reader.GetString("type");
+                if (reader.Read())
+                {
+                    return reader["type"].ToString();
+                }
+                else
+                {
+                    return null;
+                }
 
             }
             catch (MySqlException ex)
