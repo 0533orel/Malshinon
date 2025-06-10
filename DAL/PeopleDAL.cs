@@ -248,6 +248,54 @@ namespace Malshinon.DAL
         }
 
 
+        public static int GetNumReports(int reporterId)
+        {
+            try
+            {
+                conn = SqlConnection.OpenConnect();
+                string Query = @"SELECT p.num_reports FROM people p WHERE p.id = @reporterId";
+                MySqlCommand cmd = new MySqlCommand(Query, conn);
+                cmd.Parameters.AddWithValue("@reporterId", reporterId);
+                var reader = cmd.ExecuteReader();
+                reader.Read();
+                return reader.GetInt32("num_reports");
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"[ERROR] GetNumReports: {ex.Message}");
+                return -1;
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
+
+        public static int GetNumMentions(int mentionId)
+        {
+            try
+            {
+                conn = SqlConnection.OpenConnect();
+                string Query = @"SELECT p.num_mentions FROM people p WHERE p.id = @mentionId";
+                MySqlCommand cmd = new MySqlCommand(Query, conn);
+                cmd.Parameters.AddWithValue("@mentionId", mentionId);
+                var reader = cmd.ExecuteReader();
+                reader.Read();
+                return reader.GetInt32("num_mentions");
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"[ERROR] GetNumMentions: {ex.Message}");
+                return -1;
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
+
         public static void Delete(int id)
         {
             try
