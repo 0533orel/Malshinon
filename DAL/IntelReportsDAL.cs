@@ -4,6 +4,7 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,17 +43,21 @@ namespace Malshinon.DAL
         }
 
 
-        public static string GetTextByReporterId(int reporterId)
+        public static List<string> GetTextByReporterId(int reporterId)
         {
             try
             {
+                List<string> texts = new List<string>();
                 conn = SqlConnection.OpenConnect();
                 string query = "SELECT i.text FROM intelreports i WHERE i.reporter_id = @reporterId";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@reporterId", reporterId);
                 var reader = cmd.ExecuteReader();
-                reader.Read();
-                return reader.GetString("text");
+                while (reader.Read())
+                {
+                    texts.Add(reader.GetString("text"));
+                }
+                return texts;
             }
             catch (MySqlException ex)
             {
@@ -66,17 +71,21 @@ namespace Malshinon.DAL
         }
 
 
-        public static string GetTextByTargetId(int targetId)
+        public static List<string> GetTextByTargetId(int targetId)
         {
             try
             {
+                List<string> texts = new List<string>();
                 conn = SqlConnection.OpenConnect();
                 string query = "SELECT i.text FROM intelreports i WHERE i.target_id = @targetId";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@targetId", targetId);
                 var reader = cmd.ExecuteReader();
-                reader.Read();
-                return reader.GetString("text");
+                while (reader.Read())
+                {
+                    texts.Add(reader.GetString("text"));
+                }
+                return texts;
             }
             catch (MySqlException ex)
             {
@@ -152,6 +161,64 @@ namespace Malshinon.DAL
             catch (MySqlException ex)
             {
                 Console.WriteLine($"[ERROR] GetAllInfoMention: {ex.Message}");
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
+
+        public static DateTime? GetDateTime(int mentionId)
+        {
+            try
+            {
+                conn = SqlConnection.OpenConnect();
+                string Query = @"SELECT i.timestamp FROM intelreports i WHERE i.target_id = @mentionId";
+                MySqlCommand cmd = new MySqlCommand(Query, conn);
+                cmd.Parameters.AddWithValue("@mentionId", mentionId);
+                var reader = cmd.ExecuteReader();
+                reader.Read();
+                return reader.GetDateTime("timestamp");
+            }
+            catch (MySqlException ex)
+            {
+                //Console.WriteLine($"[ERROR] GetNumMentions: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
+
+        public static bool ThereIsThreeReports(DateTime dateTime)
+        {
+            try
+            {
+                conn = SqlConnection.OpenConnect();
+                string query = @"SELECT i.timestamp 
+                                FROM intelreports i
+                                WHERE i.timestamp BETWEEN @startFrom AND @dateTime";
+                DateTime startFrom = dateTime.AddMinutes(-15);
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@startFrom", startFrom);
+                cmd.Parameters.AddWithValue("@dateTime", dateTime);
+                var reader = cmd.ExecuteReader();
+                int countReports = 0;
+                while (reader.Read())
+                {
+                    countReports++;
+                }
+                if (countReports >= 3)
+                    return true;
+                else
+                    return false;
+            }
+            catch (MySqlException ex)
+            {
+                return false;
             }
             finally
             {
