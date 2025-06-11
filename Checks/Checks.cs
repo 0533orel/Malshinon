@@ -39,11 +39,11 @@ namespace Malshinon.Checks
             {
                 if (target.Type != "dangerous target and reporter" && target.NumReports > 0)
                     PeopleDAL.UpdateType(target.Id, 7);
-                else if(target.Type != "dangerous target" && target.NumReports == 0)
+                else if (target.Type != "dangerous target" && target.NumReports == 0)
                     PeopleDAL.UpdateType(target.Id, 6);
-
-                Console.WriteLine($"bizzzzzzz bekerful!!! the target: {target.FirstName} {target.LastName} I.D: {target.Id} - is dangerous!!! \n");
             }
+            if (target.Type.Contains("dangerous"))
+                Console.WriteLine($"\nbizzzzzzz bekerful!!! the target: {target.FirstName} {target.LastName} I.D: {target.Id} - is dangerous!!! \n");
         }
 
 
@@ -58,7 +58,7 @@ namespace Malshinon.Checks
                 if (text.Length >= 3)
                     countLengthText++;
             }
-            
+
 
             if (texts.Count >= 10 && countLengthText >= 100)
                 potentialTpAgent = true;
@@ -83,7 +83,7 @@ namespace Malshinon.Checks
                 }
             }
 
-            
+
         }
 
         public static bool SecretCodeAvailable(string secetCode)
