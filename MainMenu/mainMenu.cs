@@ -56,7 +56,7 @@ namespace Malshinon.Menu
 
                             Check.HeIsReporterTo(target);
 
-                            Check.HiIsDangerousTarget(target, newIntel.Timestamp);
+                            Check.HeIsDangerousTarget(target, newIntel.Timestamp);
 
                             PeopleDAL.UpdateNumReports(reporter.Id);
 

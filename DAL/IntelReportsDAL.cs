@@ -192,16 +192,17 @@ namespace Malshinon.DAL
         }
 
 
-        public static bool ThereIsThreeReports(DateTime dateTime)
+        public static bool ThereIsThreeReports(int targetId, DateTime dateTime)
         {
             try
             {
                 conn = SqlConnection.OpenConnect();
                 string query = @"SELECT i.timestamp 
                                 FROM intelreports i
-                                WHERE i.timestamp BETWEEN @startFrom AND @dateTime";
+                                WHERE target_id = @targetId AND i.timestamp BETWEEN @startFrom AND @dateTime";
                 DateTime startFrom = dateTime.AddMinutes(-15);
                 MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@targetId", targetId);
                 cmd.Parameters.AddWithValue("@startFrom", startFrom);
                 cmd.Parameters.AddWithValue("@dateTime", dateTime);
                 var reader = cmd.ExecuteReader();

@@ -31,10 +31,10 @@ namespace Malshinon.Checks
         }
 
 
-        public static void HiIsDangerousTarget(People target, DateTime timestamp)
+        public static void HeIsDangerousTarget(People target, DateTime timestamp)
         {
 
-            bool threeReports = IntelReportsDAL.ThereIsThreeReports(timestamp);
+            bool threeReports = IntelReportsDAL.ThereIsThreeReports(target.Id, timestamp);
             if (threeReports || target.NumMentions >= 20)
             {
                 if (target.Type != "dangerous target and reporter" && target.NumReports > 0)
