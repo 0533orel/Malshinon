@@ -29,11 +29,10 @@ namespace Malshinon.DAL
                 cmd.Parameters.AddWithValue("@num_reports", people.NumReports);
                 cmd.Parameters.AddWithValue("@num_mentions", people.NumMentions);
                 cmd.ExecuteNonQuery();
-                Console.WriteLine("The people added successfully.");
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine($"[ERROR] Add: {ex.Message}");
+                Console.WriteLine($"[ERROR] AddPeople: {ex.Message}");
             }
             finally
             {
@@ -155,15 +154,25 @@ namespace Malshinon.DAL
         }
 
 
-        public static void UpdateType(int id, string type)
+        public static void UpdateType(int id, int keyType)
         {
             try
             {
+                Dictionary<int, string> types = new Dictionary<int, string>
+                {
+                    {1, "reporter" },
+                    {2, "target" },
+                    {3, "both" },
+                    {4, "potential agent" },
+                    {5, "agent" },
+                    {6, "dangerous target" },
+                    {7, "dangerous target and reporter" }
+                };
                 conn = SqlConnection.OpenConnect();
                 string Query = @"UPDATE people SET type = @type  WHERE id = @id";
                 MySqlCommand cmd = new MySqlCommand(Query, conn);
                 cmd.Parameters.AddWithValue("@id", id);
-                cmd.Parameters.AddWithValue("@type", type);
+                cmd.Parameters.AddWithValue("@type", types[keyType]);
                 cmd.ExecuteNonQuery();
             }
             catch (MySqlException ex)
@@ -192,6 +201,7 @@ namespace Malshinon.DAL
                 {
                     people = new People
                     {
+                        Id = reader.GetInt32("id"),
                         FirstName = reader.GetString("first_name"),
                         LastName = reader.GetString("last_name"),
                         SecretCode = reader.GetString("secret_code"),
@@ -212,6 +222,86 @@ namespace Malshinon.DAL
                 SqlConnection.CloseConnection(conn);
             }
         }
+
+
+        public static People GetPeopleByFullName(string firstName, string lastName)
+        {
+            try
+            {
+                People people = null;
+                conn = SqlConnection.OpenConnect();
+                string query = @"SELECT * FROM people
+                                 WHERE first_name = @firstName AND last_name = @lastName";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@firstName", firstName);
+                cmd.Parameters.AddWithValue("@lastName", lastName);
+
+                var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    people = new People
+                    {
+                        Id = reader.GetInt32("id"),
+                        FirstName = reader.GetString("first_name"),
+                        LastName = reader.GetString("last_name"),
+                        SecretCode = reader.GetString("secret_code"),
+                        Type = reader.GetString("type"),
+                        NumReports = reader.GetInt32("num_reports"),
+                        NumMentions = reader.GetInt32("num_mentions")
+                    };
+                }
+                return people;
+            }
+            catch (MySqlException ex)
+            {
+                //Console.WriteLine($"[ERROR] GetPeopleById: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
+
+
+        public static People GetPeopleBySecretCode(string secretCode)
+        {
+            try
+            {
+                People people = null;
+                conn = SqlConnection.OpenConnect();
+                string query = "SELECT * FROM people WHERE secret_code = @secretCode";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@secretCode", secretCode);
+
+                var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    people = new People
+                    {
+                        Id = reader.GetInt32("id"),
+                        FirstName = reader.GetString("first_name"),
+                        LastName = reader.GetString("last_name"),
+                        SecretCode = reader.GetString("secret_code"),
+                        Type = reader.GetString("type"),
+                        NumReports = reader.GetInt32("num_reports"),
+                        NumMentions = reader.GetInt32("num_mentions")
+                    };
+                }
+                return people;
+            }
+            catch (MySqlException ex)
+            {
+                //Console.WriteLine($"[ERROR] GetPeopleBySecretCode: {ex.Message}");
+                return null;
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
 
 
         public static string GetTypeById(int id)
@@ -236,7 +326,7 @@ namespace Malshinon.DAL
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine($"[ERROR] GetTypeById: {ex.Message}");
+                //Console.WriteLine($"[ERROR] GetTypeById: {ex.Message}");
                 return null;
             }
             finally
