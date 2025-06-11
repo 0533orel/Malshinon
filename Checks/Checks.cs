@@ -49,42 +49,26 @@ namespace Malshinon.Checks
 
         public static void CanBeAgent(People reporter)
         {
-            bool potentialTpAgent = false;
-            bool canBeAgent = false;
-            List<string> texts = IntelReportsDAL.GetTextByReporterId(reporter.Id);
-            int countLengthText = 0;
-            foreach (string text in texts)
+            if (!reporter.Type.Contains("agent"))
             {
-                if (text.Length >= 3)
-                    countLengthText++;
-            }
+                List<string> texts = IntelReportsDAL.GetTextByReporterId(reporter.Id);
+                int countLengthTexts = 0;
+                foreach (string text in texts)
+                {
+                    countLengthTexts += text.Length;
+                }
+                double avgLenTexts = countLengthTexts / texts.Count;
 
-
-            if (texts.Count >= 10 && countLengthText >= 100)
-                potentialTpAgent = true;
-
-
-            bool heIsBoth = Check.HeIsBoth(reporter);
-            bool heNotAgent = reporter.Type != "potential agent" && reporter.Type != "agent";
-            if (heNotAgent && !heIsBoth && potentialTpAgent)
-            {
-                if (texts.Count >= 20 && countLengthText >= 100)
-                    canBeAgent = true;
-
-                if (potentialTpAgent && !canBeAgent)
+                if (texts.Count >= 10 && avgLenTexts >= 100)
                 {
                     PeopleDAL.UpdateType(reporter.Id, 4);
-                    Console.WriteLine($"The reporter {reporter.FirstName} {reporter.LastName} has potential to be an agent \n");
-                }
-                else if (canBeAgent)
-                {
-                    PeopleDAL.UpdateType(reporter.Id, 5);
-                    Console.WriteLine($"The reporter {reporter.FirstName} {reporter.LastName} became to agent \n");
+                    Console.WriteLine($"\nThe reporter {reporter.FirstName} {reporter.LastName} has the potential to become an agent \n");
                 }
             }
-
-
+            else
+                Console.WriteLine($"\nThe reporter {reporter.FirstName} {reporter.LastName} has the potential to become an agent \n");
         }
+
 
         public static bool SecretCodeAvailable(string secetCode)
         {
