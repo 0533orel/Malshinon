@@ -30,11 +30,10 @@ namespace Malshinon.DAL
                 cmd.Parameters.AddWithValue("@text", intelReports.Text);
                 cmd.Parameters.AddWithValue("@timestamp", intelReports.Timestamp);
                 cmd.ExecuteNonQuery();
-                Console.WriteLine("The intel reports added successfully.");
             }
             catch (MySqlException ex)
             {
-                Console.WriteLine($"[ERROR] Add: {ex.Message}");
+                Console.WriteLine($"[ERROR] AddIntelReports: {ex.Message}");
             }
             finally
             {

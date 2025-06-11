@@ -1,4 +1,4 @@
-﻿
+﻿using Malshinon.Menu;
 
 namespace Malshinon
 {
@@ -6,7 +6,7 @@ namespace Malshinon
     {
         static void Main(string[] args)
         {
-
+            mainMenu.Menu();
         }
     }
 }
