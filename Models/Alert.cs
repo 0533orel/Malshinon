@@ -9,8 +9,8 @@ namespace Malshinon.Models
     public class Alert
     {
         public int Id { get; set; }
-        public int ReporterId { get; set; }
         public int TargetId { get; set; }
+        public DateTime CreatedAt { get; set; }
         public string Reason { get; set; }
     }
 }
