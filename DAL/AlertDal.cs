@@ -54,7 +54,6 @@ namespace Malshinon.DAL
                 p.secret_code,
                 p.TYPE,
                 p.num_mentions,
-                p.num_reports,
                 a.created_at,
                 a.reason
             FROM
@@ -78,7 +77,6 @@ namespace Malshinon.DAL
                         string secretCode = reader.GetString("secret_code");
                         string type = reader.GetString("type");
                         int numMentions = reader.GetInt32("num_mentions");
-                        int numReports = reader.GetInt32("num_reports");
                         DateTime createdAt = reader.GetDateTime("created_at");
                         string reason = reader.GetString("reason");
 
@@ -87,7 +85,7 @@ namespace Malshinon.DAL
                         Console.WriteLine($"Name         : {firstName} {lastName}");
                         Console.WriteLine($"Secret Code  : {secretCode}");
                         Console.WriteLine($"Type         : {type}");
-                        Console.WriteLine($"Reports      : {numReports}");
+                        Console.WriteLine($"Reports      : {numMentions}");
                         Console.WriteLine($"Created At   : {createdAt}");
                         Console.WriteLine($"Reason       : {reason}\n");
                         counter++;

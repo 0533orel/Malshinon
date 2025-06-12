@@ -15,11 +15,11 @@ namespace Malshinon.Menu
     {
         public static void Menu()
         {
-            Console.WriteLine("Welcome to malshinon! \n");
+            Console.WriteLine("Welcome to malshinon!");
             bool exit = false;
             do
             {
-                Console.WriteLine("Please choose what you want to do? \n" +
+                Console.WriteLine("\nPlease choose what you want to do? \n" +
                 "1. Log in and report \n" +
                 "2. Sign up \n" +
                 "3. List of alerts: \n" +
