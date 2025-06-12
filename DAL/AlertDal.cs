@@ -40,31 +40,66 @@ namespace Malshinon.DAL
         }
 
 
-        public static void PrintAlerts(DateTime start, DateTime end)
+        public static void PrintAlerts()
         {
-            MySqlConnection conn = null;
             try
             {
                 conn = SqlConnection.OpenConnect();
-                string query = @"SELECT p.id AS target_id, p.first_name, p.last_name, a.created_at, a.reason FROM alerts a
-                                JOIN people p ON a.target_id = p.id
-                                WHERE a.created_at BETWEEN @start AND @end";
+
+                string query = @"
+            SELECT
+                p.id AS target_id,
+                p.first_name,
+                p.last_name,
+                p.secret_code,
+                p.TYPE,
+                p.num_mentions,
+                p.num_reports,
+                a.created_at,
+                a.reason
+            FROM
+                alerts a
+            JOIN people p ON
+                a.target_id = p.id
+            ORDER BY
+                a.created_at DESC;";
 
                 MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@start", start);
-                cmd.Parameters.AddWithValue("@end", end);
 
+                int counter = 1;
                 var reader = cmd.ExecuteReader();
-                while (reader.Read())
+                
+                if (reader.HasRows)
                 {
-                    int targetId = reader.GetInt32("target_id");
-                    string firstName = reader.GetString("first_name");
-                    string lastName = reader.GetString("last_name");
-                    DateTime createdAt = reader.GetDateTime("created_at");
-                    string reason = reader.GetString("reason");
+                    while (reader.Read())
+                    {
+                        int targetId = reader.GetInt32("target_id");
+                        string firstName = reader.GetString("first_name");
+                        string lastName = reader.GetString("last_name");
+                        string secretCode = reader.GetString("secret_code");
+                        string type = reader.GetString("type");
+                        int numMentions = reader.GetInt32("num_mentions");
+                        int numReports = reader.GetInt32("num_reports");
+                        DateTime createdAt = reader.GetDateTime("created_at");
+                        string reason = reader.GetString("reason");
 
-                    Console.WriteLine($"Target ID: {targetId} | Name: {firstName} {lastName} | Time: {createdAt} | Reason: {reason}");
+                        Console.WriteLine(counter);
+                        Console.WriteLine("\n========== ALERT ==========");
+                        Console.WriteLine($"Target ID    : {targetId}");
+                        Console.WriteLine($"Name         : {firstName} {lastName}");
+                        Console.WriteLine($"Secret Code  : {secretCode}");
+                        Console.WriteLine($"Type         : {type}");
+                        Console.WriteLine($"Mentions     : {numMentions}");
+                        Console.WriteLine($"Reports      : {numReports}");
+                        Console.WriteLine($"Created At   : {createdAt}");
+                        Console.WriteLine($"Reason       : {reason}");
+                        Console.WriteLine("===========================\n");
+                        counter++;
+                    }
                 }
+                else 
+                    Console.WriteLine($"\nThere are no notifications\n");
+
             }
             catch (MySqlException ex)
             {
@@ -75,7 +110,6 @@ namespace Malshinon.DAL
                 SqlConnection.CloseConnection(conn);
             }
         }
-
     }
 }
 
