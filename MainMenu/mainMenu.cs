@@ -22,8 +22,10 @@ namespace Malshinon.Menu
                 Console.WriteLine("Please choose what you want to do? \n" +
                 "1. Log in and report \n" +
                 "2. Sign up \n" +
-                "3. List all active alerts:" +
-                "3. Exit \n");
+                "3. List of alerts: \n" +
+                "4. List of dangerous targets \n" +
+                "5. List of potential agents\n" +
+                "6. Exit \n");
                 string userSelection = Console.ReadLine().Trim();
 
                 switch (userSelection)
@@ -78,7 +80,17 @@ namespace Malshinon.Menu
                             AlertDal.PrintAlerts();
                             break;
                         }
-                    case "t":
+                    case "4":
+                        {
+                            IntelReportsDAL.PrintDangouresTargets();
+                            break;
+                        }
+                    case "5":
+                        {
+                            PeopleDAL.PrintPotentialAgents();
+                            break;
+                        }
+                    case "6":
                         {
                             exit = true;
                             Console.WriteLine("Have a nice day.");

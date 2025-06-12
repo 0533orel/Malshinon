@@ -1,11 +1,12 @@
-﻿using Malshinon.Models;
+﻿using Malshinon.DataBase;
+using Malshinon.Models;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
-using Malshinon.DataBase;
 
 namespace Malshinon.DAL
 {
@@ -328,6 +329,67 @@ namespace Malshinon.DAL
             {
                 //Console.WriteLine($"[ERROR] GetTypeById: {ex.Message}");
                 return null;
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
+
+        public static void PrintPotentialAgents()
+        {
+            try
+            {
+                conn = SqlConnection.OpenConnect();
+                string query = @"SELECT
+                                    p.id,
+                                    p.first_name,
+                                    p.last_name,
+                                    p.secret_code,
+                                    COUNT(i.id) AS num_reports,
+                                    AVG(CHAR_LENGTH(i.text)) AS avg_text_length
+                                FROM
+                                    people p
+                                JOIN IntelReports i ON
+                                    p.id = i.reporter_id
+                                WHERE
+                                    p.type = 'potential agent'
+                                GROUP BY
+                                    p.id,
+                                    p.first_name,
+                                    p.last_name;";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                var reader = cmd.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    int counter = 1;
+                    while (reader.Read())
+                    {
+                        int reporterId = reader.GetInt32("id");
+                        string firstName = reader.GetString("first_name");
+                        string lastName = reader.GetString("last_name");
+                        string secretCode = reader.GetString("secret_code");
+                        int numReporter = reader.GetInt32("num_reports");
+                        string avgText = reader.GetString("avg_text_length");
+
+                        Console.WriteLine($"\nReporter number {counter}");
+                        Console.WriteLine($"Reporter ID  : {reporterId}");
+                        Console.WriteLine($"Name         : {firstName} {lastName}");
+                        Console.WriteLine($"Secret Code  : {secretCode}");
+                        Console.WriteLine($"Reports      : {numReporter}");
+                        Console.WriteLine($"Avg len texts: {avgText}\n");
+                        counter++;
+                    }
+                }
+                else
+                    Console.WriteLine($"\nThere are no potential agents\n");
+
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"[ERROR] GetPotentialAgents: {ex.Message}");
             }
             finally
             {

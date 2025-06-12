@@ -246,5 +246,62 @@ namespace Malshinon.DAL
                 SqlConnection.CloseConnection(conn);
             }
         }
+
+
+        public static void PrintDangouresTargets()
+        {
+            MySqlConnection conn = null;
+            try
+            {
+                conn = SqlConnection.OpenConnect();
+
+                string query = @"
+            SELECT 
+                p.id, 
+                p.first_name, 
+                p.last_name, 
+                p.secret_code, 
+                p.num_mentions
+            FROM 
+                people p
+            WHERE 
+                p.type IN ('dangerous target', 'dangerous target and reporter');";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                var reader = cmd.ExecuteReader();
+
+                if (reader.HasRows)
+                {
+                    int counter = 1;
+                    while (reader.Read())
+                    {
+                        int id = reader.GetInt32("id");
+                        string firstName = reader.GetString("first_name");
+                        string lastName = reader.GetString("last_name");
+                        string secretCode = reader.GetString("secret_code");
+                        int numMentions = reader.GetInt32("num_mentions");
+
+                        Console.WriteLine($"\nTarget number {counter}");
+                        Console.WriteLine($"ID           : {id}");
+                        Console.WriteLine($"Name         : {firstName} {lastName}");
+                        Console.WriteLine($"Secret Code  : {secretCode}");
+                        Console.WriteLine($"Reports      : {numMentions}\n");
+                        counter++;
+                    }
+                }
+                else
+                    Console.WriteLine($"\nThere are no dangerous targets\n");
+            }
+            catch (MySqlException ex)
+            {
+                Console.WriteLine($"[ERROR] PrintAgens: {ex.Message}");
+            }
+            finally
+            {
+                SqlConnection.CloseConnection(conn);
+            }
+        }
+
+
     }
 }
