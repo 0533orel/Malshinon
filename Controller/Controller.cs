@@ -176,7 +176,7 @@ namespace Malshinon.Controller
             };
             PeopleDAL.Add(newReporter);
             newReporter = PeopleDAL.GetPeopleBySecretCode(userCode);
-            Console.WriteLine("\nYou have successfully registered in the system.");
+            Console.WriteLine("\nYou have successfully registered in the system.\n");
             return newReporter;
         }
     }

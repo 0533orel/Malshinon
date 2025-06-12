@@ -1,0 +1,48 @@
+1
+CREATE TABLE People(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(30),
+    last_name VARCHAR(30),
+    secret_code VARCHAR(30) UNIQUE,
+    type ENUM(
+        'reporter',
+        'target',
+	'both',
+        'potential_agent'
+    ),
+    num_reports INT DEFAULT 0,
+    num_mentions INT DEFAULT 0
+);
+
+
+2
+CREATE TABLE IntelReports(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    reporter_id INT,
+    target_id INT,
+    text TEXT,
+    timestamp DATETIME DEFAULT NOW(), FOREIGN KEY(reporter_id) REFERENCES people(id), FOREIGN KEY(target_id) REFERENCES people(id)
+);
+
+
+3
+ALTER TABLE
+    people MODIFY COLUMN TYPE ENUM(
+        'reporter',
+        'target',
+        'both',
+        'potential agent',
+        'agent',
+        'dangerous target',
+        'dangerous target and reporter'
+    );
+
+
+4
+CREATE TABLE alerts(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    target_id INT,
+    created_at DateTime,
+    reason VARCHAR(100),
+    FOREIGN KEY(target_id) REFERENCES people(id)
+);

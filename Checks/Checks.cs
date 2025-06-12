@@ -31,18 +31,41 @@ namespace Malshinon.Checks
         }
 
 
+        public static Alert CreateAlert(int targetId, string reason)
+        {
+            Alert alert = new Alert
+            {
+                TargetId = targetId,
+                Reason = reason,
+                CreatedAt = DateTime.Now
+            };
+            AlertDal.Add(alert);
+            return alert;
+        }
+
+
         public static void HeIsDangerousTarget(People target, DateTime timestamp)
         {
-
-            bool threeReports = IntelReportsDAL.ThereIsThreeReports(target.Id, timestamp);
-            if (threeReports || target.NumMentions >= 20)
+            Alert alert;
+            bool threeQuickReports = IntelReportsDAL.ThereIsThreeReports(target.Id, timestamp);
+            if (threeQuickReports || target.NumMentions >= 20)
             {
                 if (target.Type != "dangerous target and reporter" && target.NumReports > 0)
                     PeopleDAL.UpdateType(target.Id, 7);
                 else if (target.Type != "dangerous target" && target.NumReports == 0)
                     PeopleDAL.UpdateType(target.Id, 6);
+                if (threeQuickReports)
+                {
+                    string reason = "There are several reports on the target in a short time";
+                    alert = CreateAlert(target.Id, reason);
+                }
+                else if (target.NumMentions >= 20)
+                {
+                    string reason = "There are many reports on the target.";
+                    alert = CreateAlert(target.Id, reason);
+                }
             }
-            if (target.Type.Contains("dangerous"))
+            if (target.Type.Contains("dangerous") || threeQuickReports || target.NumMentions >= 20)
                 Console.WriteLine($"\nbizzzzzzz bekerful!!! the target: {target.FirstName} {target.LastName} I.D: {target.Id} - is dangerous!!! \n");
         }
 
