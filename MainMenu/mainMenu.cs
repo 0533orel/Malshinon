@@ -1,5 +1,4 @@
 ﻿using Malshinon.Checks;
-using Malshinon.Checks;
 using Malshinon.Controller;
 using Malshinon.DAL;
 using Malshinon.Models;
