@@ -24,6 +24,7 @@ namespace Malshinon.Menu
                 "2. Sign up \n" +
                 "3. List of alerts: \n" +
                 "4. List of dangerous targets \n" +
+                "5. List of potential agents\n" +
                 "6. Exit \n");
                 string userSelection = Console.ReadLine().Trim();
 
@@ -82,6 +83,11 @@ namespace Malshinon.Menu
                     case "4":
                         {
                             IntelReportsDAL.PrintDangouresTargets();
+                            break;
+                        }
+                    case "5":
+                        {
+                            PeopleDAL.PrintPotentialAgents();
                             break;
                         }
                     case "6":

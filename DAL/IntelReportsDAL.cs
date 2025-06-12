@@ -285,7 +285,7 @@ namespace Malshinon.DAL
                         Console.WriteLine($"ID           : {id}");
                         Console.WriteLine($"Name         : {firstName} {lastName}");
                         Console.WriteLine($"Secret Code  : {secretCode}");
-                        Console.WriteLine($"Mentions     : {numMentions}\n");
+                        Console.WriteLine($"Reports      : {numMentions}\n");
                         counter++;
                     }
                 }

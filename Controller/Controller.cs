@@ -16,14 +16,13 @@ namespace Malshinon.Controller
         public static string GetUserCode()
         {
             string userCode;
-            bool isValid = false;
-            do
+            while(true)
             {
                 Console.Write("Please enter your secret code. If you don't have one, create a new one: ");
-                userCode = Console.ReadLine()!;
-                if (userCode != null)
-                    isValid = true;
-            } while (!isValid);
+                userCode = Console.ReadLine()!.Trim();
+                if (!String.IsNullOrEmpty(userCode))
+                    break;
+            }
             return userCode;
         }
 
@@ -31,97 +30,90 @@ namespace Malshinon.Controller
         public static string SignUp()
         {
             string userCode;
-            bool isValid = false;
-            do
+            while(true)
             {
-                Console.Write("Please enter a new secret code: ");
-                userCode = Console.ReadLine()!;
+                Console.Write("\nPlease enter a new secret code: ");
+                userCode = Console.ReadLine()!.Trim();
 
                 bool availableCode = Check.SecretCodeAvailable(userCode);
                 if (!availableCode)
-                    Console.WriteLine("The code is taken, please try again. \n");
+                    Console.WriteLine("\nThe code is taken, please try again.");
 
-                if (userCode != null && availableCode)
-                    isValid = true;
+                if (!String.IsNullOrEmpty(userCode) && availableCode)
+                    break;
 
-            } while (!isValid);
-            Console.WriteLine("Done! \n");
+            } 
+            Console.WriteLine("\nDone! \n");
             return userCode;
         }
 
 
         public static string GetTargetFirstName()
         {
-            bool isValid = false;
             string firsName;
-            do
+            while(true)
             {
                 Console.Write("Please enter the first name of the terrorist you want to report: ");
-                firsName = Console.ReadLine()!;
-                if (firsName != null)
-                    isValid = true;
-            } while (!isValid);
+                firsName = Console.ReadLine()!.Trim();
+                if (!String.IsNullOrEmpty(firsName))
+                    break;
+            } 
             return firsName;
         }
 
 
         public static string GetTargetLastName()
         {
-            bool isValid = false;
             string LastName;
-            do
+            while(true)
             {
                 Console.Write("Please enter the last name of the terrorist you want to report: ");
-                LastName = Console.ReadLine()!;
-                if (LastName != null)
-                    isValid = true;
-            } while (!isValid);
+                LastName = Console.ReadLine()!.Trim();
+                if (!String.IsNullOrEmpty(LastName))
+                    break;
+            } 
             return LastName;
         }
 
 
         public static string GetReporterFirstName()
         {
-            bool isValid = false;
             string firsName;
-            do
+            while(true)
             {
                 Console.Write("Please enter your first name: ");
-                firsName = Console.ReadLine()!;
-                if (firsName != null)
-                    isValid = true;
-            } while (!isValid);
+                firsName = Console.ReadLine()!.Trim();
+                if (!String.IsNullOrEmpty(firsName))
+                    break;
+            }  
             return firsName;
         }
 
 
         public static string GetReporterLastName()
         {
-            bool isValid = false;
             string LastName;
-            do
+            while(true)
             {
                 Console.Write("Please enter your last name: ");
-                LastName = Console.ReadLine()!;
-                if (LastName != null)
-                    isValid = true;
-            } while (!isValid);
+                LastName = Console.ReadLine()!.Trim();
+                if (!String.IsNullOrEmpty(LastName))
+                    break;
+            } 
             return LastName;
         }
 
 
         public static string GetText()
         {
-            bool isValid = false;
             string text;
-            do
+            while(true)
             {
-                isValid = false;
                 Console.WriteLine("\nEnter the information you have about the terrorist.");
-                text = Console.ReadLine()!;
-                if (text != null)
-                    isValid = true;
-            } while (!isValid);
+                text = Console.ReadLine()!.Trim();
+                if (!String.IsNullOrEmpty(text))
+                    break;
+            } 
             return text;
         }
 
@@ -176,7 +168,7 @@ namespace Malshinon.Controller
             };
             PeopleDAL.Add(newReporter);
             newReporter = PeopleDAL.GetPeopleBySecretCode(userCode);
-            Console.WriteLine("\nYou have successfully registered in the system.\n");
+            Console.WriteLine("\nYou have successfully registered in the system.");
             return newReporter;
         }
     }

@@ -87,7 +87,6 @@ namespace Malshinon.DAL
                         Console.WriteLine($"Name         : {firstName} {lastName}");
                         Console.WriteLine($"Secret Code  : {secretCode}");
                         Console.WriteLine($"Type         : {type}");
-                        Console.WriteLine($"Mentions     : {numMentions}");
                         Console.WriteLine($"Reports      : {numReports}");
                         Console.WriteLine($"Created At   : {createdAt}");
                         Console.WriteLine($"Reason       : {reason}\n");
