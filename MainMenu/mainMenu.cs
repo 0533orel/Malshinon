@@ -22,6 +22,7 @@ namespace Malshinon.Menu
                 Console.WriteLine("Please choose what you want to do? \n" +
                 "1. Log in and report \n" +
                 "2. Sign up \n" +
+                "3. List all active alerts:" +
                 "3. Exit \n");
                 string userSelection = Console.ReadLine().Trim();
 
@@ -73,6 +74,11 @@ namespace Malshinon.Menu
                             break;
                         }
                     case "3":
+                        {
+                            AlertDal.PrintAlerts();
+                            break;
+                        }
+                    case "t":
                         {
                             exit = true;
                             Console.WriteLine("Have a nice day.");
