@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace Malshinon.Models
 {
-    public class IntelReports
+    public class Alert
     {
         public int Id { get; set; }
-        public int ReporterId { get; set; }
         public int TargetId { get; set; }
-        public string Text { get; set; }
-        public DateTime Timestamp { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public string Reason { get; set; }
     }
 }
