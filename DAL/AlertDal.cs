@@ -65,10 +65,9 @@ namespace Malshinon.DAL
                 a.created_at DESC;";
 
                 MySqlCommand cmd = new MySqlCommand(query, conn);
-
-                int counter = 1;
                 var reader = cmd.ExecuteReader();
                 
+                int counter = 1;
                 if (reader.HasRows)
                 {
                     while (reader.Read())
@@ -83,8 +82,7 @@ namespace Malshinon.DAL
                         DateTime createdAt = reader.GetDateTime("created_at");
                         string reason = reader.GetString("reason");
 
-                        Console.WriteLine(counter);
-                        Console.WriteLine("\n========== ALERT ==========");
+                        Console.WriteLine($"\nAlert number {counter}");
                         Console.WriteLine($"Target ID    : {targetId}");
                         Console.WriteLine($"Name         : {firstName} {lastName}");
                         Console.WriteLine($"Secret Code  : {secretCode}");
@@ -92,8 +90,7 @@ namespace Malshinon.DAL
                         Console.WriteLine($"Mentions     : {numMentions}");
                         Console.WriteLine($"Reports      : {numReports}");
                         Console.WriteLine($"Created At   : {createdAt}");
-                        Console.WriteLine($"Reason       : {reason}");
-                        Console.WriteLine("===========================\n");
+                        Console.WriteLine($"Reason       : {reason}\n");
                         counter++;
                     }
                 }
